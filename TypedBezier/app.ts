@@ -110,11 +110,13 @@ module Bezier.UI {
     }
 
     function canvasDoubleClicked(ev: PointerEvent): void {
-        curve.addControlPoint(ev.offsetX, ev.offsetY)
+        normalizeOffset(ev);
+        curve.addControlPoint(ev.offsetX, ev.offsetY);
         redraw();
     }
 
     function canvasMouseDown(ev: MouseEvent): void {
+        normalizeOffset(ev);
         if (ev.button == 0) {
             draggedPointIndex = curve.selectControlPointIndex(ev.offsetX, ev.offsetY);
         } else if (ev.button == 2) {
@@ -131,13 +133,28 @@ module Bezier.UI {
     }
 
     function canvasMouseMove(ev: MouseEvent): void {
+        normalizeOffset(ev);
         if (draggedPointIndex != null) {
             curve.moveControlPoint(draggedPointIndex, ev.offsetX, ev.offsetY);
             redraw();
         }
     }
 
-  
+    //dirty polyfill I copied from http://www.jacklmoore.com/notes/mouse-position/ because apparently IE is the only browser that follows standards
+    function normalizeOffset(e: MouseEvent) {
+        if (!e.hasOwnProperty('offsetX')) {
+            var target = e.target || e.srcElement,
+                style: any = (<any>target).currentStyle || (<any>window).getComputedStyle(target, null),
+                borderLeftWidth = parseInt(style['borderLeftWidth'], 10),
+                borderTopWidth = parseInt(style['borderTopWidth'], 10),
+                rect = (<any>target).getBoundingClientRect(),
+                offsetX = e.clientX - borderLeftWidth - rect.left,
+                offsetY = e.clientY - borderTopWidth - rect.top;
+
+            e.offsetX = offsetX;
+            e.offsetY = offsetY;
+        }
+    };
 
     window.onload = () => {
         drawCanvas = <HTMLCanvasElement> document.getElementById('drawCanvas');
