@@ -67,7 +67,7 @@ module Bezier.UI {
         for (var i = 0; i < controlPoints.length; i++) {
             var radius = 4;
             drawContext.beginPath();
-            drawContext.arc(controlPoints[i].getX(), controlPoints[i].getY(), radius, 0, 2 * Math.PI, false);
+            drawContext.arc(controlPoints[i].x, controlPoints[i].y, radius, 0, 2 * Math.PI, false);
             drawContext.fillStyle = 'green';
             drawContext.fill();
             drawContext.lineWidth = 1;
@@ -90,9 +90,9 @@ module Bezier.UI {
     function drawPolyline(points: Point[], strokeStyle: string) {
         if (points.length > 1) {
             drawContext.beginPath();
-            drawContext.moveTo(points[0].getX(), points[0].getY());
+            drawContext.moveTo(points[0].x, points[0].y);
             for (var i = 1; i < points.length; i++) {
-                drawContext.lineTo(points[i].getX(), points[i].getY());
+                drawContext.lineTo(points[i].x, points[i].y);
             }
 
             drawContext.lineWidth = 1;

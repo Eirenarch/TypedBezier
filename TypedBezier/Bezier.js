@@ -2,17 +2,25 @@
 (function (Bezier) {
     var Point = (function () {
         function Point(x, y) {
-            this.x = x;
-            this.y = y;
+            this._x = x;
+            this._y = y;
             Object.freeze(this);
         }
-        Point.prototype.getX = function () {
-            return this.x;
-        };
+        Object.defineProperty(Point.prototype, "x", {
+            get: function () {
+                return this._x;
+            },
+            enumerable: true,
+            configurable: true
+        });
 
-        Point.prototype.getY = function () {
-            return this.y;
-        };
+        Object.defineProperty(Point.prototype, "y", {
+            get: function () {
+                return this._y;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return Point;
     })();
     Bezier.Point = Point;
@@ -68,7 +76,7 @@
         BezierCurve.prototype.selectControlPointIndex = function (x, y, offset) {
             if (typeof offset === "undefined") { offset = 4; }
             for (var i = 0; i < this.controlPoints.length; i++) {
-                if (x > this.controlPoints[i].getX() - 4 && x < this.controlPoints[i].getX() + 4 && y > this.controlPoints[i].getY() - 4 && y < this.controlPoints[i].getY() + 4) {
+                if (x > this.controlPoints[i].x - 4 && x < this.controlPoints[i].x + 4 && y > this.controlPoints[i].y - 4 && y < this.controlPoints[i].y + 4) {
                     return i;
                 }
             }
@@ -104,8 +112,8 @@
     function lerpPoint(fromPoint, toPoint, t) {
         var s = 1.0 - t;
 
-        var x = fromPoint.getX() * s + toPoint.getX() * t;
-        var y = fromPoint.getY() * s + toPoint.getY() * t;
+        var x = fromPoint.x * s + toPoint.x * t;
+        var y = fromPoint.y * s + toPoint.y * t;
 
         return new Point(x, y);
     }
@@ -181,7 +189,7 @@ var Bezier;
             for (var i = 0; i < controlPoints.length; i++) {
                 var radius = 4;
                 drawContext.beginPath();
-                drawContext.arc(controlPoints[i].getX(), controlPoints[i].getY(), radius, 0, 2 * Math.PI, false);
+                drawContext.arc(controlPoints[i].x, controlPoints[i].y, radius, 0, 2 * Math.PI, false);
                 drawContext.fillStyle = 'green';
                 drawContext.fill();
                 drawContext.lineWidth = 1;
@@ -203,9 +211,9 @@ var Bezier;
         function drawPolyline(points, strokeStyle) {
             if (points.length > 1) {
                 drawContext.beginPath();
-                drawContext.moveTo(points[0].getX(), points[0].getY());
+                drawContext.moveTo(points[0].x, points[0].y);
                 for (var i = 1; i < points.length; i++) {
-                    drawContext.lineTo(points[i].getX(), points[i].getY());
+                    drawContext.lineTo(points[i].x, points[i].y);
                 }
 
                 drawContext.lineWidth = 1;

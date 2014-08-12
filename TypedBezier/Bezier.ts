@@ -1,21 +1,20 @@
 ﻿module Bezier {
 
     export class Point {
-        private x: number;
-        private y: number;
+        private _x: number;
+        private _y: number;
 
         constructor(x: number, y: number) {
-            this.x = x;
-            this.y = y;
+            this._x = x;
+            this._y = y;
             Object.freeze(this);
         }
-
-        getX() {
-            return this.x;
+        get x(): number {
+            return this._x;
         }
 
-        getY() {
-            return this.y;
+        get y(): number {
+            return this._y;
         }
     }
 
@@ -66,10 +65,10 @@
 
         selectControlPointIndex(x: number, y: number, offset: number = 4): number {
             for (var i = 0; i < this.controlPoints.length; i++) {
-                if (x > this.controlPoints[i].getX() - 4
-                    && x < this.controlPoints[i].getX() + 4
-                    && y > this.controlPoints[i].getY() - 4
-                    && y < this.controlPoints[i].getY() + 4) {
+                if (x > this.controlPoints[i].x - 4
+                    && x < this.controlPoints[i].x + 4
+                    && y > this.controlPoints[i].y - 4
+                    && y < this.controlPoints[i].y + 4) {
                     return i;
                 }
             }
@@ -103,8 +102,8 @@
     function lerpPoint(fromPoint: Point, toPoint: Point, t: number): Point {
         var s = 1.0 - t;
 
-        var x = fromPoint.getX() * s + toPoint.getX() * t;
-        var y = fromPoint.getY() * s + toPoint.getY() * t;
+        var x = fromPoint.x * s + toPoint.x * t;
+        var y = fromPoint.y * s + toPoint.y * t;
 
         return new Point(x, y);
     }
